@@ -5,8 +5,17 @@ from flask_cors import CORS
 import yt_dlp
 import uuid
 import re
+import sys
 
-app = Flask(__name__, static_folder='static')
+def get_resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
+app = Flask(__name__, static_folder=get_resource_path('static'))
 CORS(app)
 
 DOWNLOAD_DIR = 'downloads'
@@ -15,8 +24,8 @@ os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 tasks = {}
 
 def download_audio_task(task_id, url, metadata):
-    # Absolute path to local ffmpeg
-    ffmpeg_path = os.path.abspath('ffmpeg.exe') 
+    # Absolute path to local ffmpeg bundled with PyInstaller
+    ffmpeg_path = get_resource_path('ffmpeg.exe')
     
     def hook(d):
         if d['status'] == 'downloading':
