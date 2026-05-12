@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YT Audio Extractor | 高品质音频提取</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="background">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <div class="container">
+        <div class="glass-panel">
+            <div class="header">
+                <div class="logo">
+                    <i class="fa-solid fa-music"></i>
+                </div>
+                <h1>YT Audio Extractor</h1>
+                <p>提取无损级 MP3 音频，自动匹配视频封面</p>
+            </div>
+
+            <div class="input-section">
+                <div class="input-group">
+                    <i class="fa-brands fa-youtube input-icon"></i>
+                    <input type="text" id="url-input" placeholder="在此粘贴 YouTube 视频链接...">
+                    <button id="download-btn">提取音频</button>
+                </div>
+                <div class="error-msg" id="error-msg">请输入有效的 YouTube 链接</div>
+                
+                <div class="metadata-toggle" id="metadata-toggle">
+                    <i class="fa-solid fa-chevron-down"></i> 手动设置歌曲信息 (可选)
+                </div>
+                
+                <div class="metadata-section hidden" id="metadata-section">
+                    <div class="metadata-grid">
+                        <div class="metadata-input">
+                            <label>输出格式 (Format)</label>
+                            <select id="audio-format" style="background: rgba(255, 255, 255, 0.05); padding: 10px 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); color: white; outline: none;">
+                                <option value="mp3" style="color: black;">MP3 (推荐，高兼容性)</option>
+                                <option value="flac" style="color: black;">FLAC (无损转换，避免音质二次折损)</option>
+                                <option value="m4a" style="color: black;">M4A (YouTube原生格式提取)</option>
+                            </select>
+                        </div>
+                        <div class="metadata-input">
+                            <label>歌曲名 (Title)</label>
+                            <input type="text" id="meta-title" placeholder="默认使用视频标题">
+                        </div>
+                        <div class="metadata-input">
+                            <label>歌手 (Artist)</label>
+                            <input type="text" id="meta-artist" placeholder="例如: 周杰伦">
+                        </div>
+                        <div class="metadata-input">
+                            <label>专辑 (Album)</label>
+                            <input type="text" id="meta-album" placeholder="例如: 依然范特西">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress-section hidden" id="progress-section">
+                <div class="status-text" id="status-text">准备下载...</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+                <div class="progress-percent" id="progress-percent">0%</div>
+            </div>
+
+            <div class="result-section hidden" id="result-section">
+                <div class="success-icon">
+                    <i class="fa-solid fa-check-circle"></i>
+                </div>
+                <h3 id="result-title">音频提取成功!</h3>
+                <p>专辑封面已自动嵌入至音频文件</p>
+                <a href="#" id="download-link" class="download-file-btn">
+                    <i class="fa-solid fa-download"></i> 保存文件
+                </a>
+                <button id="reset-btn" class="reset-btn">提取另一个视频</button>
+            </div>
+            
+            <div class="features">
+                <div class="feature">
+                    <i class="fa-solid fa-headphones"></i>
+                    <span>最高音质 (VBR 0)</span>
+                </div>
+                <div class="feature">
+                    <i class="fa-solid fa-image"></i>
+                    <span>自动封套</span>
+                </div>
+                <div class="feature">
+                    <i class="fa-solid fa-bolt"></i>
+                    <span>极速处理</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

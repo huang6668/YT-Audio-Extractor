@@ -1,0 +1,30 @@
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Executables & Binaries (Important: Do not upload FFmpeg to GitHub!)
+*.exe
+ffmpeg.exe
+ffprobe.exe
+
+# Downloads and Outputs
+downloads/
+
+# PyInstaller build folders
+build/
+dist/
+*.spec
+
+# IDEs
+.idea/
+.vscode/
+*.swp
