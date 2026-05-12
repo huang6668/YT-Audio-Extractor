@@ -162,4 +162,11 @@ def get_file(task_id):
     return send_file(filepath, as_attachment=True, download_name=original_title)
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    import webbrowser
+    import threading
+    
+    # 延迟 1.5 秒后自动打开默认浏览器
+    threading.Timer(1.5, lambda: webbrowser.open('http://127.0.0.1:5000')).start()
+    
+    # 在打包的 EXE 中，绝对不能开启 debug=True，否则会导致不断重启甚至崩溃
+    app.run(port=5000, debug=False)
