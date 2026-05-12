@@ -21,6 +21,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const metaArtist = document.getElementById('meta-artist');
     const metaAlbum = document.getElementById('meta-album');
     
+    const autoImportCb = document.getElementById('auto-import-cb');
+    const amPathContainer = document.getElementById('am-path-container');
+    const amPathInput = document.getElementById('am-path');
+    
+    // Load saved path
+    const savedAmPath = localStorage.getItem('apple_music_path');
+    if (savedAmPath) {
+        amPathInput.value = savedAmPath;
+        autoImportCb.checked = true;
+        amPathContainer.classList.remove('hidden');
+    }
+    
+    autoImportCb.addEventListener('change', (e) => {
+        if (e.target.checked) {
+            amPathContainer.classList.remove('hidden');
+        } else {
+            amPathContainer.classList.add('hidden');
+        }
+    });
+    
     let currentTaskId = null;
     let pollInterval = null;
     
@@ -30,21 +50,35 @@ document.addEventListener('DOMContentLoaded', () => {
         metadataToggle.classList.toggle('open');
     });
     
-    // YouTube URL validation
-    const isValidYouTubeUrl = (url) => {
-        const p = /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
-        if(url.match(p)){
-            return url.match(p)[1];
+    // URL validation (basic format check)
+    const isValidUrl = (url) => {
+        try {
+            new URL(url);
+            return true;
+        } catch (e) {
+            return false;
         }
-        return false;
     };
     
     downloadBtn.addEventListener('click', async () => {
         const url = urlInput.value.trim();
         
-        if (!url || !isValidYouTubeUrl(url)) {
+        if (!url || !isValidUrl(url)) {
+            errorMsg.innerText = '请输入有效的网址 (支持 YouTube, Bilibili 等)';
             errorMsg.style.display = 'block';
             return;
+        }
+        
+        if (autoImportCb.checked && !amPathInput.value.trim()) {
+            errorMsg.innerText = '请填写 Apple Music 的自动添加文件夹路径';
+            errorMsg.style.display = 'block';
+            return;
+        }
+        
+        if (autoImportCb.checked) {
+            localStorage.setItem('apple_music_path', amPathInput.value.trim());
+        } else {
+            localStorage.removeItem('apple_music_path');
         }
         
         errorMsg.style.display = 'none';
@@ -53,7 +87,9 @@ document.addEventListener('DOMContentLoaded', () => {
             title: metaTitle.value.trim(),
             artist: metaArtist.value.trim(),
             album: metaAlbum.value.trim(),
-            audioFormat: document.getElementById('audio-format').value
+            audioFormat: document.getElementById('audio-format').value,
+            autoImport: autoImportCb.checked,
+            importPath: amPathInput.value.trim()
         };
         
         // Start process

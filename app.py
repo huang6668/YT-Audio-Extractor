@@ -43,9 +43,9 @@ def download_audio_task(task_id, url, metadata):
     if audio_format == 'm4a':
         ydl_format = 'bestaudio[ext=m4a]/bestaudio'
         preferredcodec = 'm4a'
-    elif audio_format == 'flac':
+    elif audio_format == 'alac':
         ydl_format = 'bestaudio/best'
-        preferredcodec = 'flac'
+        preferredcodec = 'alac'
     else:
         ydl_format = 'bestaudio/best'
         preferredcodec = 'mp3'
@@ -77,6 +77,8 @@ def download_audio_task(task_id, url, metadata):
     if ffmpeg_args:
         ydl_opts['postprocessor_args'] = {'ffmpeg': ffmpeg_args}
 
+    import shutil
+    
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=True)
@@ -84,14 +86,29 @@ def download_audio_task(task_id, url, metadata):
             filename = ydl.prepare_filename(info)
             # The extension will be changed to the preferred codec by postprocessor
             base, _ = os.path.splitext(filename)
-            final_filename = base + f'.{preferredcodec}'
             
-            # If user provided a title, we can also rename the final file to use the new title
-            # but for simplicity we keep the original title in filename or just use task_id
+            # For ALAC, yt-dlp usually puts it in an m4a container
+            ext = 'm4a' if preferredcodec == 'alac' else preferredcodec
+            final_filename = base + f'.{ext}'
             
-            tasks[task_id]['status'] = 'completed'
+            # Just in case yt-dlp names it .alac
+            if not os.path.exists(final_filename) and preferredcodec == 'alac':
+                final_filename = base + '.alac'
+                
             tasks[task_id]['file'] = final_filename
             tasks[task_id]['title'] = metadata.get('title') if metadata and metadata.get('title') else info.get('title', 'Audio')
+            
+            # Auto Import to Apple Music
+            if metadata and metadata.get('autoImport') and metadata.get('importPath'):
+                import_path = metadata.get('importPath')
+                if os.path.isdir(import_path):
+                    try:
+                        shutil.copy2(final_filename, import_path)
+                        tasks[task_id]['title'] += " (已推送到 Apple Music)"
+                    except Exception as e:
+                        print("Auto import failed:", e)
+            
+            tasks[task_id]['status'] = 'completed'
     except Exception as e:
         tasks[task_id]['status'] = 'error'
         tasks[task_id]['error'] = str(e)

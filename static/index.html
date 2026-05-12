@@ -27,10 +27,10 @@
             <div class="input-section">
                 <div class="input-group">
                     <i class="fa-brands fa-youtube input-icon"></i>
-                    <input type="text" id="url-input" placeholder="在此粘贴 YouTube 视频链接...">
+                    <input type="text" id="url-input" placeholder="粘贴视频链接 (支持 YouTube / Bilibili 等)...">
                     <button id="download-btn">提取音频</button>
                 </div>
-                <div class="error-msg" id="error-msg">请输入有效的 YouTube 链接</div>
+                <div class="error-msg" id="error-msg">请输入有效的链接</div>
                 
                 <div class="metadata-toggle" id="metadata-toggle">
                     <i class="fa-solid fa-chevron-down"></i> 手动设置歌曲信息 (可选)
@@ -42,7 +42,7 @@
                             <label>输出格式 (Format)</label>
                             <select id="audio-format" style="background: rgba(255, 255, 255, 0.05); padding: 10px 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); color: white; outline: none;">
                                 <option value="mp3" style="color: black;">MP3 (推荐，高兼容性)</option>
-                                <option value="flac" style="color: black;">FLAC (无损转换，避免音质二次折损)</option>
+                                <option value="alac" style="color: black;">ALAC (Apple 无损格式，专为 Apple Music 设计)</option>
                                 <option value="m4a" style="color: black;">M4A (YouTube原生格式提取)</option>
                             </select>
                         </div>
@@ -57,6 +57,17 @@
                         <div class="metadata-input">
                             <label>专辑 (Album)</label>
                             <input type="text" id="meta-album" placeholder="例如: 依然范特西">
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+                        <label style="display: flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer;">
+                            <input type="checkbox" id="auto-import-cb" style="width: 16px; height: 16px; margin: 0; padding: 0; flex: none;">
+                            自动推送到 Apple Music / iTunes
+                        </label>
+                        <div class="metadata-input hidden" id="am-path-container" style="margin-top: 10px;">
+                            <label>Apple Music 自动添加文件夹路径</label>
+                            <input type="text" id="am-path" placeholder="例如: C:\Users\xxx\Music\Apple Music\Media\Automatically Add to Apple Music" style="font-size: 12px; padding: 8px 12px;">
                         </div>
                     </div>
                 </div>
